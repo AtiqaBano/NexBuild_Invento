@@ -84,4 +84,4 @@ const getStockHistory = async (req, res) => {
   }
 };
 
-module.exports = { adjustStock, getStockHistory};
+module.exports = { adjustStock, getStockHistory };

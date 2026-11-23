@@ -1,4 +1,3 @@
-
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 const Customer = require("../models/Customer");
@@ -78,54 +77,54 @@ const createOrder = async (req, res) => {
 const getOrders = async (req, res) => {
   try {
     const {
-  status,
-  search,
-  startDate,
-  endDate,
-  page = 1,
-  limit = 10,
-} = req.query;
+      status,
+      search,
+      startDate,
+      endDate,
+      page = 1,
+      limit = 10,
+    } = req.query;
     const filter = {};
-    
+
     if (status) {
       filter.status = status;
     }
 
     // Filter orders by date
-if (startDate || endDate) {
-  filter.createdAt = {};
+    if (startDate || endDate) {
+      filter.createdAt = {};
 
-  if (startDate) {
-    const start = new Date(`${startDate}T00:00:00.000Z`);
+      if (startDate) {
+        const start = new Date(`${startDate}T00:00:00.000Z`);
 
-    if (Number.isNaN(start.getTime())) {
-      return res.status(400).json({ message: "Invalid start date" });
+        if (Number.isNaN(start.getTime())) {
+          return res.status(400).json({ message: "Invalid start date" });
+        }
+
+        filter.createdAt.$gte = start;
+      }
+
+      if (endDate) {
+        const end = new Date(`${endDate}T00:00:00.000Z`);
+
+        if (Number.isNaN(end.getTime())) {
+          return res.status(400).json({ message: "Invalid end date" });
+        }
+
+        end.setUTCDate(end.getUTCDate() + 1);
+        filter.createdAt.$lt = end;
+      }
+
+      if (
+        startDate &&
+        endDate &&
+        new Date(startDate) > new Date(endDate)
+      ) {
+        return res.status(400).json({
+          message: "Start date cannot be after end date",
+        });
+      }
     }
-
-    filter.createdAt.$gte = start;
-  }
-
-  if (endDate) {
-    const end = new Date(`${endDate}T00:00:00.000Z`);
-
-    if (Number.isNaN(end.getTime())) {
-      return res.status(400).json({ message: "Invalid end date" });
-    }
-
-    end.setUTCDate(end.getUTCDate() + 1);
-    filter.createdAt.$lt = end;
-  }
-
-  if (
-    startDate &&
-    endDate &&
-    new Date(startDate) > new Date(endDate)
-  ) {
-    return res.status(400).json({
-      message: "Start date cannot be after end date",
-    });
-  }
-}
 
     if (search) {
       const customers = await Customer.find({
@@ -277,5 +276,5 @@ const updateOrderStatus = async (req, res) => {
 module.exports = {
   createOrder,
   getOrders,
- updateOrderStatus,
+  updateOrderStatus,
 };

@@ -30,10 +30,9 @@ function Sidebar() {
             key={item.path}
             to={item.path}
             className={({ isActive }) =>
-              `flex items-center gap-3 rounded-lg px-4 py-3 text-sm transition ${
-                isActive
-                  ? "bg-indigo-600 font-semibold text-white"
-                  : "text-slate-300 hover:bg-slate-800 hover:text-white"
+              `flex items-center gap-3 rounded-lg px-4 py-3 text-sm transition ${isActive
+                ? "bg-indigo-600 font-semibold text-white"
+                : "text-slate-300 hover:bg-slate-800 hover:text-white"
               }`
             }
           >
